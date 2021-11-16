@@ -12,6 +12,16 @@ h2 {
     font-size: 250%;
 }
 
+
 .timer {
-    
+    color: var(--secondary);
+}
+
+#questions {
+    color: var(--secondary);
+}
+
+.answer-list {
+    background-color: var(--primary);
+    color: white;
 }

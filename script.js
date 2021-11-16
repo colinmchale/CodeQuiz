@@ -1,4 +1,3 @@
-// Script Sheet
 let timeLeft = 50;
 let intervalId;
 let timerEl = document.querySelector(".timer");
@@ -7,7 +6,7 @@ let questions = document.querySelector("#questions")
 let answerChoices = document.querySelector("#answer-list")
 
 
-let questions = [
+let quizContent = [
     {
         question: "What is 14 + 39?",
         answers: ["45", "53", "62", "63"],
@@ -20,8 +19,8 @@ let questions = [
     },
     {
         question: "What is 18 + 45?",
-        answers: ["", "example"],
-        correctAnswer: "example",
+        answers: ["59", "62", "63", "73"],
+        correctAnswer: 2,
     },
     {
         question: "What is 72 - 56",
@@ -39,6 +38,36 @@ let questions = [
         correctAnswer: 3,
     },
 ]
+
+  function startQuiz() {
+        
+
+    for (let i = 0; i < quizContent.length; i++) {
+        document.querySelector("#questions").textContent = quizContent[i].question;
+        document.querySelector("#btn0").textContent = quizContent[i].answers[0];
+        document.querySelector("#btn0").dataset.value = 0;
+        document.querySelector("#btn1").textContent = quizContent[i].answers[1];
+        document.querySelector("#btn1").dataset.value = 1;
+        document.querySelector("#btn2").textContent = quizContent[i].answers[2];
+        document.querySelector("#btn2").dataset.value = 2;
+        document.querySelector("#btn3").textContent = quizContent[i].answers[3];
+        document.querySelector("#btn3").dataset.value = 3;
+
+
+
+        answerChoices.addEventListener("click", function(event) {
+    
+             if ( event.target === quizContent[i].correctAnswer) {
+             return;
+        } else {
+            timeLeft -= 10;
+            return;
+        }
+          });
+
+       
+    }
+    }
 
 function countdown() {    
     // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
@@ -62,12 +91,9 @@ function countdown() {
         // gameOver();
     }
 }, 1000);
-}
+};
 
-//   function startQuiz() {
-    
-    //   }
-    
+
     // function gameOver() {
 
     // }
@@ -76,5 +102,5 @@ function countdown() {
         clearInterval(intervalId);
         timeLeft = 50;
         countdown();
-        // startQuiz();
+        startQuiz();
       });
