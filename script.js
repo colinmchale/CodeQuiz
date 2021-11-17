@@ -2,9 +2,14 @@ let timeLeft = 50;
 let intervalId;
 let timerEl = document.querySelector(".timer");
 let startButton = document.querySelector("#startButton");
-let questions = document.querySelector("#questions")
-let answerChoices = document.querySelector("#answer-list")
-
+let questions = document.querySelector("#questions");
+// let answerChoices = document.querySelectorAll(".answer-list")
+let answer0 = document.querySelector("#btn0");
+let answer1 = document.querySelector("#btn1");
+let answer2 = document.querySelector("#btn2");
+let answer3 = document.querySelector("#btn3");
+let counter = 0;
+let userGuess;
 
 let quizContent = [
     {
@@ -33,41 +38,77 @@ let quizContent = [
         correctAnswer: 0,
     },
     {
-        question: "What is 372 * 109?",
-        answers: ["36,018", "38,868", "39,978", "40,548"],
+        question: "What is 102 - 43?",
+        answers: ["47", "51", "57", "59"],
         correctAnswer: 3,
     },
 ]
 
-  function startQuiz() {
-        
 
-    for (let i = 0; i < quizContent.length; i++) {
-        document.querySelector("#questions").textContent = quizContent[i].question;
-        document.querySelector("#btn0").textContent = quizContent[i].answers[0];
-        document.querySelector("#btn0").dataset.value = 0;
-        document.querySelector("#btn1").textContent = quizContent[i].answers[1];
-        document.querySelector("#btn1").dataset.value = 1;
-        document.querySelector("#btn2").textContent = quizContent[i].answers[2];
-        document.querySelector("#btn2").dataset.value = 2;
-        document.querySelector("#btn3").textContent = quizContent[i].answers[3];
-        document.querySelector("#btn3").dataset.value = 3;
-
-
-
-        answerChoices.addEventListener("click", function(event) {
+function currentQuestion() {
+        document.querySelector("#questions").textContent = quizContent[counter].question;
+        answer0.textContent = quizContent[counter].answers[0];
+        answer0.dataset.value = 0;
+        answer1.textContent = quizContent[counter].answers[1];
+        answer1.dataset.value = 1;
+        answer2.textContent = quizContent[counter].answers[2];
+        answer2.dataset.value = 2;
+        answer3.textContent = quizContent[counter].answers[3];
+        answer3.dataset.value = 3;  
     
-             if ( event.target === quizContent[i].correctAnswer) {
-             return;
-        } else {
-            timeLeft -= 10;
-            return;
-        }
-          });
+        // for (let i = 0; i < answerChoices.length; i++) {
+        //     answerChoices[i].addEventListener("click", function() {
+        //         console.log(this.dataset.value);
+        //         let userGuess = this.dataset.value
+        //     });
+        // };
+   
+        answer0.addEventListener("click", function() {
+            console.log(answer0.dataset.value);
+            userGuess = answer0.dataset.value;
+            
+            checkAnswer();
+        });
 
-       
+        answer1.addEventListener("click", function() {
+            console.log(answer1.dataset.value);
+            userGuess = answer1.dataset.value;
+            checkAnswer();
+        });
+
+        answer2.addEventListener("click", function() {
+            console.log(answer2.dataset.value);
+            userGuess = answer2.dataset.value;
+            checkAnswer();
+        });
+                
+        answer3.addEventListener("click", function() {
+            console.log(answer3.dataset.value);
+            userGuess = answer3.dataset.value;
+            checkAnswer();
+        });
+};
+    
+
+function checkAnswer(){
+ if (userGuess == quizContent[counter].correctAnswer) {
+        if (counter < quizContent.length) {
+            counter++;
+            currentQuestion();
+        } else {
+            endGame();
+        }
+    } else {
+        if (counter < quizContent.length) {
+            timeLeft -= 10;
+            counter++;
+            currentQuestion();
+        } else {
+            endGame();
+        }
     }
-    }
+};
+
 
 function countdown() {    
     // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
@@ -84,9 +125,9 @@ function countdown() {
         timeLeft--;
     } else {
         // Once `timeLeft` gets to 0, set `timerEl` to an empty string
-        timerEl.textContent = '';
+        timerEl.textContent = "Time's Up!";
         // Use `clearInterval()` to stop the timer
-        clearInterval(timeInterval);
+        clearInterval(intervalId);
         // Call the `gameOver` function
         // gameOver();
     }
@@ -101,6 +142,7 @@ function countdown() {
       startButton.addEventListener("click", function() {
         clearInterval(intervalId);
         timeLeft = 50;
+        counter = 0;
         countdown();
-        startQuiz();
+        currentQuestion();
       });
