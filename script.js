@@ -1,15 +1,14 @@
-let timeLeft = 50;
+let timeLeft = 60;
 let intervalId;
 let timerEl = document.querySelector(".timer");
 let startButton = document.querySelector("#startButton");
 let questions = document.querySelector("#questions");
-// let answerChoices = document.querySelectorAll(".answer-list")
 let answer0 = document.querySelector("#btn0");
 let answer1 = document.querySelector("#btn1");
 let answer2 = document.querySelector("#btn2");
 let answer3 = document.querySelector("#btn3");
 let counter = 0;
-let userGuess;
+let userGuess = 0;
 
 let quizContent = [
     {
@@ -45,7 +44,8 @@ let quizContent = [
 ]
 
 
-function currentQuestion() {
+function currentQuestion () {
+        userGuess = 0;
         document.querySelector("#questions").textContent = quizContent[counter].question;
         answer0.textContent = quizContent[counter].answers[0];
         answer0.dataset.value = 0;
@@ -56,17 +56,20 @@ function currentQuestion() {
         answer3.textContent = quizContent[counter].answers[3];
         answer3.dataset.value = 3;  
     
+        console.log(counter);
+
+
         // for (let i = 0; i < answerChoices.length; i++) {
         //     answerChoices[i].addEventListener("click", function() {
         //         console.log(this.dataset.value);
         //         let userGuess = this.dataset.value
         //     });
-        // };
+        // }; 
    
+
         answer0.addEventListener("click", function() {
             console.log(answer0.dataset.value);
             userGuess = answer0.dataset.value;
-            
             checkAnswer();
         });
 
@@ -90,13 +93,13 @@ function currentQuestion() {
 };
     
 
-function checkAnswer(){
+function checkAnswer () {
  if (userGuess == quizContent[counter].correctAnswer) {
         if (counter < quizContent.length) {
             counter++;
             currentQuestion();
         } else {
-            endGame();
+            gameOver();
         }
     } else {
         if (counter < quizContent.length) {
@@ -104,7 +107,7 @@ function checkAnswer(){
             counter++;
             currentQuestion();
         } else {
-            endGame();
+            gameOver();
         }
     }
 };
@@ -135,13 +138,13 @@ function countdown() {
 };
 
 
-    // function gameOver() {
+    // function gameOver () {
 
     // }
     
       startButton.addEventListener("click", function() {
         clearInterval(intervalId);
-        timeLeft = 50;
+        timeLeft = 60;
         counter = 0;
         countdown();
         currentQuestion();
