@@ -9,6 +9,8 @@ let answer2 = document.querySelector("#btn2");
 let answer3 = document.querySelector("#btn3");
 let counter = 0;
 let userGuess = 0;
+let userInitials = document.querySelector("#initials")
+let userScore = document.querySelector("#highscores")
 
 let quizContent = [
     {
@@ -138,10 +140,28 @@ function countdown() {
 };
 
 
-    // function gameOver () {
-
-    // }
+//     function gameOver () {
+//       signUpButton.addEventListener("click", function(event) {
+//         event.preventDefault();
+      
+//         var initials = document.querySelector("#initials").value;
+//         var highscore = document.querySelector("#highscore").value;
+      
+//           localStorage.setItem("initials", initials);
+//           localStorage.setItem("highscore", highscore);
+//           renderLastScore();
+//         });
+// }
     
+//     function renderLastScore() {
+//             let initials = localStorage.getItem("initials");
+//             let highscore = localStorage.getItem("highscore");
+        
+//             userInitials.textContent = initials;
+//             userScore.textContent = highscore;
+//         }
+        
+
       startButton.addEventListener("click", function() {
         clearInterval(intervalId);
         timeLeft = 60;

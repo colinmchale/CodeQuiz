@@ -34,3 +34,7 @@ h3 {
 #highscores {
     color: var(--primary);
 }
+
+#intials {
+    color: var(--secondary);
+}
