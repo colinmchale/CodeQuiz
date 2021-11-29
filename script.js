@@ -2,6 +2,7 @@ let timeLeft = 60;
 let intervalId;
 let timerEl = document.querySelector(".timer");
 let startButton = document.querySelector("#startButton");
+let clearButton = document.querySelector("#clearButton");
 let questions = document.querySelector("#questions");
 let answer0 = document.querySelector("#btn0");
 let answer1 = document.querySelector("#btn1");
@@ -9,8 +10,10 @@ let answer2 = document.querySelector("#btn2");
 let answer3 = document.querySelector("#btn3");
 let counter = 0;
 let userGuess = 0;
-let userInitials = document.querySelector("#initials")
-let userScore = document.querySelector("#highscores")
+let scoreTable = document.querySelector(".scoretable");
+let timeSection = document.querySelector(".timeSection");
+
+let allScores = [];
 
 let quizContent = [
     {
@@ -69,42 +72,42 @@ function currentQuestion () {
         // }; 
    
 
-        answer0.addEventListener("click", function() {
-            console.log(answer0.dataset.value);
-            userGuess = answer0.dataset.value;
-            checkAnswer();
-        });
+    };
+    answer0.addEventListener("click", function() {
+        console.log(answer0.dataset.value);
+        userGuess = answer0.dataset.value;
+        checkAnswer();
+    });
 
-        answer1.addEventListener("click", function() {
-            console.log(answer1.dataset.value);
-            userGuess = answer1.dataset.value;
-            checkAnswer();
-        });
+    answer1.addEventListener("click", function() {
+        console.log(answer1.dataset.value);
+        userGuess = answer1.dataset.value;
+        checkAnswer();
+    });
 
-        answer2.addEventListener("click", function() {
-            console.log(answer2.dataset.value);
-            userGuess = answer2.dataset.value;
-            checkAnswer();
-        });
-                
-        answer3.addEventListener("click", function() {
-            console.log(answer3.dataset.value);
-            userGuess = answer3.dataset.value;
-            checkAnswer();
-        });
-};
+    answer2.addEventListener("click", function() {
+        console.log(answer2.dataset.value);
+        userGuess = answer2.dataset.value;
+        checkAnswer();
+    });
+            
+    answer3.addEventListener("click", function() {
+        console.log(answer3.dataset.value);
+        userGuess = answer3.dataset.value;
+        checkAnswer();
+    });
     
 
 function checkAnswer () {
  if (userGuess == quizContent[counter].correctAnswer) {
-        if (counter < quizContent.length) {
+        if (counter < 5) {
             counter++;
             currentQuestion();
         } else {
             gameOver();
         }
     } else {
-        if (counter < quizContent.length) {
+        if (counter < 5) {
             timeLeft -= 10;
             counter++;
             currentQuestion();
@@ -134,33 +137,96 @@ function countdown() {
         // Use `clearInterval()` to stop the timer
         clearInterval(intervalId);
         // Call the `gameOver` function
-        // gameOver();
+        timeLeft = 0;
+        gameOver();
     }
 }, 1000);
 };
 
 
-//     function gameOver () {
-//       signUpButton.addEventListener("click", function(event) {
-//         event.preventDefault();
-      
-//         var initials = document.querySelector("#initials").value;
-//         var highscore = document.querySelector("#highscore").value;
-      
-//           localStorage.setItem("initials", initials);
-//           localStorage.setItem("highscore", highscore);
-//           renderLastScore();
+function gameOver () {
+    let timeRemaining = timeLeft;
+    let finalScore = document.createElement("p");
+    clearInterval(intervalId);
+    finalScore.textContent = "Your final score is: " + timeRemaining;
+
+    timeSection.appendChild(finalScore);
+
+     // Label and input for user to type initials
+     let initialLabel = document.createElement("label");
+     initialLabel.setAttribute("id", "createLabel");
+     initialLabel.textContent = "Enter your initials: ";
+ 
+     timeSection.appendChild(initialLabel); 
+
+    let initialInput = document.createElement("input");
+    initialInput.setAttribute("type", "text");
+    initialInput.setAttribute("id", "initials");
+    initialInput.textContent = "";
+
+    timeSection.appendChild(initialInput);
+
+    // submit button after initials have been typed
+    let initialSubmit = document.createElement("button");
+    initialSubmit.setAttribute("type", "submit");
+    initialSubmit.setAttribute("id", "Submit");
+    initialSubmit.textContent = "Submit";
+
+    timeSection.appendChild(initialSubmit);
+
+    initialSubmit.addEventListener("click", function () {
+        let initials = initialInput.value;
+
+        if (initials === null) {
+
+            console.log("No value entered!");
+
+        } else {
+            let finalScore = {
+                initials: initials,
+                score: timeRemaining
+            }
+            console.log(finalScore);
+            let allScores = localStorage.getItem("allScores");
+            if (allScores === null) {
+                allScores = [];
+            } else {
+                allScores = JSON.parse(allScores);
+            }
+            allScores.push(finalScore);
+            let newScore = JSON.stringify(allScores);
+            localStorage.setItem("allScores", newScore);
+            renderLastScore();
+        }
+});
+};
+
+
+//         localStorage.setItem("initials", JSON.stringify(highInitials));
+//         localStorage.setItem("highscore", JSON.stringify(highScores));
+
+//         renderLastScore();
 //         });
 // }
     
-//     function renderLastScore() {
-//             let initials = localStorage.getItem("initials");
-//             let highscore = localStorage.getItem("highscore");
-        
-//             userInitials.textContent = initials;
-//             userScore.textContent = highscore;
-//         }
-        
+function renderLastScore() {
+    
+    let allScores = localStorage.getItem("allScores");
+    allScores = JSON.parse(allScores);
+
+    if (allScores !== null) {
+
+    for (let i = 0; i < ; i++) {
+
+        let initialLi = document.createElement("li");
+        initialLi.textContent = allScores[i].initials + " " + allScores[i].score;
+        scoreTable.appendChild(initialLi);
+
+     }
+    };
+};  
+
+
 
       startButton.addEventListener("click", function() {
         clearInterval(intervalId);
@@ -168,4 +234,15 @@ function countdown() {
         counter = 0;
         countdown();
         currentQuestion();
+        if (timeSection.chi) {
+            finalScore.remove()
+        }
       });
+
+
+      clearButton.addEventListener("click", function() {
+        localStorage.clear();
+        location.reload();
+      });
+
+renderLastScore();

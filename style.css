@@ -31,6 +31,12 @@ h3 {
     color: white;
 }
 
+.scoretable {
+    margin-left:auto;
+    margin-right:auto;
+    color: var(--secondary); 
+}
+
 #highscores {
     color: var(--primary);
 }
