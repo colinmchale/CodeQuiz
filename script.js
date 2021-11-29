@@ -193,9 +193,8 @@ function gameOver () {
 };
 
 function renderLastScore() {
-
     let allScores = localStorage.getItem("allScores");
-    console.log(allScores)
+    console.log(allScores);
     allScores = JSON.parse(allScores);
 
     if (allScores !== null) {
