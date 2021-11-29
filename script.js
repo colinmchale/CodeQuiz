@@ -63,15 +63,6 @@ function currentQuestion () {
     
         console.log(counter);
 
-
-        // for (let i = 0; i < answerChoices.length; i++) {
-        //     answerChoices[i].addEventListener("click", function() {
-        //         console.log(this.dataset.value);
-        //         let userGuess = this.dataset.value
-        //     });
-        // }; 
-   
-
     };
     answer0.addEventListener("click", function() {
         console.log(answer0.dataset.value);
@@ -201,22 +192,15 @@ function gameOver () {
 });
 };
 
-
-//         localStorage.setItem("initials", JSON.stringify(highInitials));
-//         localStorage.setItem("highscore", JSON.stringify(highScores));
-
-//         renderLastScore();
-//         });
-// }
-    
 function renderLastScore() {
-    
+
     let allScores = localStorage.getItem("allScores");
+    console.log(allScores)
     allScores = JSON.parse(allScores);
 
     if (allScores !== null) {
 
-    for (let i = 0; i < ; i++) {
+    for (let i = 0; i < 5; i++) {
 
         let initialLi = document.createElement("li");
         initialLi.textContent = allScores[i].initials + " " + allScores[i].score;
@@ -226,16 +210,14 @@ function renderLastScore() {
     };
 };  
 
-
-
       startButton.addEventListener("click", function() {
         clearInterval(intervalId);
         timeLeft = 60;
         counter = 0;
         countdown();
         currentQuestion();
-        if (timeSection.chi) {
-            finalScore.remove()
+        while (timeSection.firstChild) {
+        timeSection.removeChild(timeSection.firstChild);
         }
       });
 
