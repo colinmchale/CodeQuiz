@@ -2,12 +2,14 @@
 :root{
     --primary: rgb(31, 152, 168);
     --secondary: rgb(25, 123, 252);
-    --background: rgb(245, 245, 207);
-    background-color: var(--background);
+    --tertiary: rgb(245, 245, 207);
     text-align: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+h1 {
+    color: var(--tertiary)
+}
 
 h2 {
     color: var(--primary);
@@ -28,7 +30,7 @@ h3 {
 
 .answer-list {
     background-color: var(--primary);
-    color: white;
+    color: var(--tertiary);
 }
 
 .scoretable {

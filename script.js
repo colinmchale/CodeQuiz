@@ -4,10 +4,11 @@ let timerEl = document.querySelector(".timer");
 let startButton = document.querySelector("#startButton");
 let clearButton = document.querySelector("#clearButton");
 let questions = document.querySelector("#questions");
-let answer0 = document.querySelector("#btn0");
-let answer1 = document.querySelector("#btn1");
-let answer2 = document.querySelector("#btn2");
-let answer3 = document.querySelector("#btn3");
+let answerChoices = document.querySelector("#answerChoices");
+// let answer0 = document.querySelector("#btn0");
+// let answer1 = document.querySelector("#btn1");
+// let answer2 = document.querySelector("#btn2");
+// let answer3 = document.querySelector("#btn3");
 let counter = 0;
 let userGuess = 0;
 let scoreTable = document.querySelector(".scoretable");
@@ -48,63 +49,59 @@ let quizContent = [
     },
 ]
 
+function renderQuestion (counter) {
+    if (answerChoices.textContent) {
+        answerChoices.textContent = ''
+    }
+    let currentQuestion = quizContent[counter];
+    questions.textContent = quizContent[counter].question;
+    for (let i = 0; i < currentQuestion.answers.length; i++) {
+        let choiceBtn = document.createElement('button');
+        choiceBtn.classList.add("btn", "m-2", "answer-list");
+        choiceBtn.setAttribute("onclick", "checkAnswer(event)");
+        choiceBtn.setAttribute("value", i);
+        choiceBtn.textContent = currentQuestion.answers[i];
+        answerChoices.appendChild(choiceBtn);
+    }
+}
 
-function currentQuestion () {
-        userGuess = 0;
-        document.querySelector("#questions").textContent = quizContent[counter].question;
-        answer0.textContent = quizContent[counter].answers[0];
-        answer0.dataset.value = 0;
-        answer1.textContent = quizContent[counter].answers[1];
-        answer1.dataset.value = 1;
-        answer2.textContent = quizContent[counter].answers[2];
-        answer2.dataset.value = 2;
-        answer3.textContent = quizContent[counter].answers[3];
-        answer3.dataset.value = 3;  
-    
-        console.log(counter);
 
-    };
-    answer0.addEventListener("click", function() {
-        console.log(answer0.dataset.value);
-        userGuess = answer0.dataset.value;
-        checkAnswer();
-    });
+// function currentQuestion () {
+        // userGuess = 0;
+        // document.querySelector("#questions").textContent = quizContent[counter].question;
+        // answer0.textContent = quizContent[counter].answers[0];
+        // answer0.dataset.value = 0;
+        // answer1.textContent = quizContent[counter].answers[1];
+        // answer1.dataset.value = 1;
+        // answer2.textContent = quizContent[counter].answers[2];
+        // answer2.dataset.value = 2;
+        // answer3.textContent = quizContent[counter].answers[3];
+        // answer3.dataset.value = 3;  
 
-    answer1.addEventListener("click", function() {
-        console.log(answer1.dataset.value);
-        userGuess = answer1.dataset.value;
-        checkAnswer();
-    });
-
-    answer2.addEventListener("click", function() {
-        console.log(answer2.dataset.value);
-        userGuess = answer2.dataset.value;
-        checkAnswer();
-    });
+    //     answerChoices.textContent = ''
+    //     for (let i = 0; i < answer.length; i++) {
+    //         let choiceBtn =document.createElement('button');
+    //         choiceBtn.setAttribute("onclick", "checkAnswer");
+    //         choiceBtn.classList.add("btn", "m-2", "bg-dark", "text-light");
+    //         choiceBtn.append(answerChoices);
             
-    answer3.addEventListener("click", function() {
-        console.log(answer3.dataset.value);
-        userGuess = answer3.dataset.value;
-        checkAnswer();
-    });
-    
+    //     }
 
-function checkAnswer () {
- if (userGuess == quizContent[counter].correctAnswer) {
-        if (counter < 5) {
-            counter++;
-            currentQuestion();
-        } else {
-            gameOver();
-        }
+    //     console.log(counter);
+
+    // };    
+
+function checkAnswer (event) {
+    console.log(event.target.value)
+    if (event.target.value == quizContent[counter].correctAnswer && counter < 5) {
+        counter++;
+        renderQuestion(counter);       
+    } else if (event.target.value !== quizContent[counter].correctAnswer && counter < 5) {
+        timeLeft -= 10;
+        counter++;
+        renderQuestion(counter);
     } else {
-        if (counter < 5) {
-            timeLeft -= 10;
-            counter++;
-            currentQuestion();
-        } else {
-            gameOver();
-        }
+        gameOver();
     }
 };
 
@@ -126,7 +123,7 @@ function countdown() {
         // Once `timeLeft` gets to 0, set `timerEl` to an empty string
         timerEl.textContent = "Time's Up!";
         // Use `clearInterval()` to stop the timer
-        clearInterval(intervalId);
+        // clearInterval(intervalId);
         // Call the `gameOver` function
         timeLeft = 0;
         gameOver();
@@ -136,9 +133,9 @@ function countdown() {
 
 
 function gameOver () {
+    clearInterval(intervalId);
     let timeRemaining = timeLeft;
     let finalScore = document.createElement("p");
-    clearInterval(intervalId);
     finalScore.textContent = "Your final score is: " + timeRemaining;
 
     timeSection.appendChild(finalScore);
@@ -207,23 +204,46 @@ function renderLastScore() {
 
      }
     };
-};  
+};
 
-      startButton.addEventListener("click", function() {
-        clearInterval(intervalId);
-        timeLeft = 60;
-        counter = 0;
-        countdown();
-        currentQuestion();
-        while (timeSection.firstChild) {
-        timeSection.removeChild(timeSection.firstChild);
-        }
-      });
+startButton.addEventListener("click", function() {
+  clearInterval(intervalId);
+  timeLeft = 60;
+  counter = 0;
+  countdown();
+  renderQuestion(counter);
+//   while (timeSection.firstChild) {
+//   timeSection.removeChild(timeSection.firstChild);
+//   }
+});
 
+// answer0.addEventListener("click", function() {
+//     console.log(answer0.dataset.value);
+//     userGuess = answer0.dataset.value;
+//     checkAnswer();
+// });
 
-      clearButton.addEventListener("click", function() {
-        localStorage.clear();
-        location.reload();
-      });
+// answer1.addEventListener("click", function() {
+//     console.log(answer1.dataset.value);
+//     userGuess = answer1.dataset.value;
+//     checkAnswer();
+// });
 
-renderLastScore();
+// answer2.addEventListener("click", function() {
+//     console.log(answer2.dataset.value);
+//     userGuess = answer2.dataset.value;
+//     checkAnswer();
+// });
+        
+// answer3.addEventListener("click", function() {
+//     console.log(answer3.dataset.value);
+//     userGuess = answer3.dataset.value;
+//     checkAnswer();
+// });
+
+clearButton.addEventListener("click", function() {
+  localStorage.clear();
+  location.reload();
+});
+
+// renderLastScore();
