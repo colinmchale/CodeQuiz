@@ -1,18 +1,15 @@
 let timeLeft = 60;
 let intervalId;
-let timerEl = document.querySelector(".timer");
+let timerEl = document.querySelector("#timer");
 let startButton = document.querySelector("#startButton");
 let clearButton = document.querySelector("#clearButton");
 let questions = document.querySelector("#questions");
 let answerChoices = document.querySelector("#answerChoices");
-// let answer0 = document.querySelector("#btn0");
-// let answer1 = document.querySelector("#btn1");
-// let answer2 = document.querySelector("#btn2");
-// let answer3 = document.querySelector("#btn3");
+let results = document.querySelector("#results");
+let scoreTable = document.querySelector("#scoreboard");
 let counter = 0;
 let userGuess = 0;
-let scoreTable = document.querySelector(".scoretable");
-let timeSection = document.querySelector(".timeSection");
+
 
 let allScores = [];
 
@@ -63,33 +60,7 @@ function renderQuestion (counter) {
         choiceBtn.textContent = currentQuestion.answers[i];
         answerChoices.appendChild(choiceBtn);
     }
-}
-
-
-// function currentQuestion () {
-        // userGuess = 0;
-        // document.querySelector("#questions").textContent = quizContent[counter].question;
-        // answer0.textContent = quizContent[counter].answers[0];
-        // answer0.dataset.value = 0;
-        // answer1.textContent = quizContent[counter].answers[1];
-        // answer1.dataset.value = 1;
-        // answer2.textContent = quizContent[counter].answers[2];
-        // answer2.dataset.value = 2;
-        // answer3.textContent = quizContent[counter].answers[3];
-        // answer3.dataset.value = 3;  
-
-    //     answerChoices.textContent = ''
-    //     for (let i = 0; i < answer.length; i++) {
-    //         let choiceBtn =document.createElement('button');
-    //         choiceBtn.setAttribute("onclick", "checkAnswer");
-    //         choiceBtn.classList.add("btn", "m-2", "bg-dark", "text-light");
-    //         choiceBtn.append(answerChoices);
-            
-    //     }
-
-    //     console.log(counter);
-
-    // };    
+}  
 
 function checkAnswer (event) {
     console.log(event.target.value)
@@ -122,9 +93,6 @@ function countdown() {
     } else {
         // Once `timeLeft` gets to 0, set `timerEl` to an empty string
         timerEl.textContent = "Time's Up!";
-        // Use `clearInterval()` to stop the timer
-        // clearInterval(intervalId);
-        // Call the `gameOver` function
         timeLeft = 0;
         gameOver();
     }
@@ -135,73 +103,79 @@ function countdown() {
 function gameOver () {
     clearInterval(intervalId);
     let timeRemaining = timeLeft;
+    timerEl.textContent = "";
+    questions.textContent = "";
+    answerChoices.textContent = "";
     let finalScore = document.createElement("p");
     finalScore.textContent = "Your final score is: " + timeRemaining;
 
-    timeSection.appendChild(finalScore);
+    results.appendChild(finalScore);
 
      // Label and input for user to type initials
-     let initialLabel = document.createElement("label");
-     initialLabel.setAttribute("id", "createLabel");
-     initialLabel.textContent = "Enter your initials: ";
+    let initialLabel = document.createElement("label");
+    initialLabel.setAttribute("id", "createLabel");
+    initialLabel.textContent = "Enter your initials: ";
  
-     timeSection.appendChild(initialLabel); 
+    results.appendChild(initialLabel); 
+
+    let resultsForm = document.createElement("form");
+    resultsForm.setAttribute("onsubmit", "saveHighScore(event)");
+
+    results.appendChild(resultsForm);
 
     let initialInput = document.createElement("input");
     initialInput.setAttribute("type", "text");
     initialInput.setAttribute("id", "initials");
     initialInput.textContent = "";
 
-    timeSection.appendChild(initialInput);
+    resultsForm.appendChild(initialInput);
 
-    // submit button after initials have been typed
     let initialSubmit = document.createElement("button");
     initialSubmit.setAttribute("type", "submit");
     initialSubmit.setAttribute("id", "Submit");
     initialSubmit.textContent = "Submit";
 
-    timeSection.appendChild(initialSubmit);
-
-    initialSubmit.addEventListener("click", function () {
-        let initials = initialInput.value;
-
-        if (initials === null) {
-
-            console.log("No value entered!");
-
-        } else {
-            let finalScore = {
-                initials: initials,
-                score: timeRemaining
-            }
-            console.log(finalScore);
-            let allScores = localStorage.getItem("allScores");
-            if (allScores === null) {
-                allScores = [];
-            } else {
-                allScores = JSON.parse(allScores);
-            }
-            allScores.push(finalScore);
-            let newScore = JSON.stringify(allScores);
-            localStorage.setItem("allScores", newScore);
-            renderLastScore();
-        }
-});
+    resultsForm.appendChild(initialSubmit);
 };
 
-function renderLastScore() {
+function saveHighScore(event) {
+    let finalScore;
+    event.preventDefault();
+    console.log('test');
+    let initialValue = document.querySelector("#initials");
+    let userInitials = initialValue.value;
+    let timeRemaining = timeLeft;
+    console.log(initialValue.value);
+    console.log(timeLeft);
+    if (initials === null) {
+        console.log("No value entered!");
+    } else {
+        finalScore = {
+          initials: userInitials,
+          score: timeRemaining
+        }
+    }
+    console.log(finalScore)
+    allScores.unshift(finalScore);
+    let newScore = JSON.stringify(allScores);
+    localStorage.setItem("allScores", newScore);
+    renderHighScores();
+}
+
+
+function renderHighScores() {
+    scoreTable.textContent = "";
     let allScores = localStorage.getItem("allScores");
     console.log(allScores);
     allScores = JSON.parse(allScores);
 
     if (allScores !== null) {
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < allScores.length; i++) {
 
         let initialLi = document.createElement("li");
-        initialLi.textContent = allScores[i].initials + " " + allScores[i].score;
+        initialLi.textContent = allScores[i].initials + "  " + allScores[i].score;
         scoreTable.appendChild(initialLi);
-
      }
     };
 };
@@ -212,38 +186,19 @@ startButton.addEventListener("click", function() {
   counter = 0;
   countdown();
   renderQuestion(counter);
-//   while (timeSection.firstChild) {
-//   timeSection.removeChild(timeSection.firstChild);
-//   }
+  if (results.textContent) {
+    results.textContent = "";
+  }
 });
 
-// answer0.addEventListener("click", function() {
-//     console.log(answer0.dataset.value);
-//     userGuess = answer0.dataset.value;
-//     checkAnswer();
-// });
-
-// answer1.addEventListener("click", function() {
-//     console.log(answer1.dataset.value);
-//     userGuess = answer1.dataset.value;
-//     checkAnswer();
-// });
-
-// answer2.addEventListener("click", function() {
-//     console.log(answer2.dataset.value);
-//     userGuess = answer2.dataset.value;
-//     checkAnswer();
-// });
-        
-// answer3.addEventListener("click", function() {
-//     console.log(answer3.dataset.value);
-//     userGuess = answer3.dataset.value;
-//     checkAnswer();
-// });
+clearButton.addEventListener("click", function() {
+    localStorage.clear();
+    location.reload();
+  });
 
 clearButton.addEventListener("click", function() {
   localStorage.clear();
   location.reload();
 });
 
-// renderLastScore();
+// renderHighScores();
